@@ -339,9 +339,10 @@ class ControlTests(unittest.TestCase):
 
     @unittest.skipUnless(os.name == "nt", "Windows npm batch wrapper")
     def test_windows_batch_wrapper_with_spaces(self):
-        path = self.root / "npm install/agent-device.cmd"
+        path = self.root / "npm install & tools/agent-device.cmd"
         path.parent.mkdir()
         path.write_text('@echo off\nif "%~1"=="--version" (echo 0.21.36) else (echo agent-device --json)\n')
+        self.assertEqual(pc.run([path, "--version"]), (0, "0.21.36", ""))
         self.assertEqual(pc.probe("agent-device", path)["version"], "0.21.36")
 
 

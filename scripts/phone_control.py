@@ -145,7 +145,9 @@ def run(argv, timeout=15, env=None):
             raise ControlError("unsupported_batch_arguments", "Windows 包装器探测参数无效。")
         child_env["PHONE_CONTROL_BATCH_PATH"] = argv[0]
         command = '""%PHONE_CONTROL_BATCH_PATH%" ' + " ".join('"' + a + '"' for a in argv[1:]) + '"'
-        argv = [child_env.get("COMSPEC", "cmd.exe"), "/d", "/v:off", "/s", "/c", command]
+        # Pass the complete Windows command line unchanged. A list would make
+        # subprocess apply CRT quote escaping to /c, which cmd.exe does not use.
+        argv = subprocess.list2cmdline([child_env.get("COMSPEC", "cmd.exe")]) + " /d /v:off /s /c " + command
     try:
         result = subprocess.run(argv, capture_output=True, text=True, encoding="utf-8",
                                 errors="replace", timeout=timeout, env=child_env)
