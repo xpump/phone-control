@@ -1,0 +1,6 @@
+interface:
+  display_name: "phone control"
+  short_description: "控制手机和平板，优先使用 agent-device，必要时回退 scrcpy"
+  default_prompt: "使用 $phone-control 控制已连接的手机，优先使用 agent-device，失败后回退 scrcpy。"
+policy:
+  allow_implicit_invocation: true
